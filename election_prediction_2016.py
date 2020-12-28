@@ -51,3 +51,41 @@ def pivoter(dataframe, year):
     df.columns = ['STATE', 'MANUFACTURING_SHARE_' + year]
 
     return df
+
+
+def gdp_by_sector_data_loader():
+    '''
+    Loads in GDP data.
+    '''
+
+    fname = 'GDP by Sector (BEA).csv'
+    df = pd.read_csv(
+        fname,
+        skiprows=4,
+        usecols=['GeoName', 'Description', '2012', '2016']
+    )
+
+    drop_regions = [
+        'United States *',
+        'New England',
+        'Mideast',
+        'Great Lakes',
+        'Plains',
+        'Southeast',
+        'Southwest',
+        'Rocky Mountain',
+        'Far West'
+    ]
+    df = df[~df['GeoName'].isin(drop_regions)]
+    df = df[df['GeoName'].notna()]
+
+    df['Description'] = df['Description'].str.replace('    Manufacturing', 'Manufacturing')
+    keep_industries = ['All industry total', 'Manufacturing']
+    df = df[df['Description'].isin(keep_industries)]
+
+    df_2012 = pivoter(df, '2012')
+    df_2016 = pivoter(df, '2016')
+
+    df = pd.merge(df_2012, df_2016, on='STATE')
+
+    return df
