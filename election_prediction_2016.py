@@ -107,3 +107,41 @@ def nces_names_cleaner(dataframe):
     df['STATE'] = [state[2:] for state in df['STATE']]
 
     return df
+
+
+def high_school_grad_data_loader():
+    '''
+    Loads in the public high school graduation data.
+    '''
+
+    fname = 'High School Graduation by State (NCES).xls'
+    df = pd.read_excel(
+        fname,
+        skiprows=2,
+        usecols=['Unnamed: 0', '2011-12', '2015-16']
+    )
+
+    df.columns = ['STATE', 'HS_GRAD_2012', 'HS_GRAD_2016']
+
+    df = nces_names_cleaner(df)
+
+    return df
+
+
+def high_school_enroll_data_loader():
+    '''
+    Loads in the public high school enrollment data.
+    '''
+
+    fname = 'High School Enrollment (NCES).xls'
+    df = pd.read_excel(
+        fname,
+        skiprows=2,
+        usecols=['Unnamed: 0', 'Fall 2012', 'Fall 2016']
+    )
+
+    df.columns = ['STATE', 'HS_ENROLLMENT_2012', 'HS_ENROLLMENT_2016']
+
+    df = nces_names_cleaner(df)
+
+    return df
