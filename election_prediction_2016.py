@@ -44,8 +44,7 @@ def pivoter(dataframe, year):
     cols = ['Manufacturing', 'All industry total']
     df[cols] = df[cols].astype(float)
 
-    df['MANUFACTURING_SHARE_' + year] = df['Manufacturing'] / \
-        df['All industry total']
+    df['MANUFACTURING_SHARE_' + year] = df['Manufacturing'] / df['All industry total']
 
     df = df[['GeoName', 'MANUFACTURING_SHARE_' + year]]
     df.columns = ['STATE', 'MANUFACTURING_SHARE_' + year]
@@ -87,5 +86,24 @@ def gdp_by_sector_data_loader():
     df_2016 = pivoter(df, '2016')
 
     df = pd.merge(df_2012, df_2016, on='STATE')
+
+    return df
+
+
+def nces_names_cleaner(dataframe):
+    '''
+    Subsets dataframes produced by the National Center for Education
+    Statistics and cleans up the names of states.
+    '''
+
+    df = dataframe.copy()
+
+    df = df[10:70]
+    df = df[df['STATE'].notna()]
+
+    df['STATE'] = df['STATE'].str.replace('.', '')
+    df['STATE'] = [state[:-4] if len(state) == 26 else state for state in df['STATE']]
+    df['STATE'] = [state[:-1] if state.endswith(' ') else state for state in df['STATE']]
+    df['STATE'] = [state[2:] for state in df['STATE']]
 
     return df
