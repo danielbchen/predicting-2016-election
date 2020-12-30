@@ -252,8 +252,7 @@ def census_voting_2016_loader():
 
     df.columns = ['State', 'Race and Hispanic origin', 'Total voted']
     replacements = {'White non-Hispanic alone': '.White non-Hispanic alone'}
-    df['Race and Hispanic origin'] = df['Race and Hispanic origin'].replace(
-        replacements)
+    df['Race and Hispanic origin'] = df['Race and Hispanic origin'].replace(replacements)
 
     df = census_cleaner(df, '2016')
 
