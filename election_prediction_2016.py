@@ -164,3 +164,97 @@ def nces_data_merger(dataframe1, dataframe2):
     df = df[['STATE', 'HS_GRAD_RATE_2012', 'HS_GRAD_RATE_2016']]
 
     return df
+
+
+def census_cleaner(dataframe, year):
+    '''
+    Cleans a census data file and returns annual data on the ratio of male to
+    female voters along with the ratio of white to non-white voters.
+
+    A greater male to female ratio means that there are more males.
+    A greater white to non-white ratio means that there are more white voters.
+    '''
+
+    df = dataframe.copy()
+
+    rows_to_cols = [
+        'Male',
+        'Female',
+        '.White non-Hispanic alone',
+        'Black alone',
+        'Asian alone',
+        'Hispanic (of any race)'
+    ]
+    df = df[df['Race and Hispanic origin'].isin(rows_to_cols)]
+
+    df['Total voted'] = df['Total voted'].replace('-', '0').astype(int)
+
+    df = (df.pivot(index='State', columns='Race and Hispanic origin', values='Total voted')
+            .reset_index())
+
+    df = (df.rename_axis(None, axis=1)
+            .rename_axis('row_num', axis=0)
+            .reset_index()
+            .drop('row_num', axis=1))
+
+    df['MALE_FEMALE_RATIO'] = df['Male'] / df['Female']
+    df['NON-WHITE'] = (df['Asian alone']
+                       + df['Black alone']
+                       + df['Hispanic (of any race)'])
+    df['WHITE_NON_WHITE_RATIO'] = (df['.White non-Hispanic alone']
+                                   / df['NON-WHITE'])
+
+    df = df[['State', 'MALE_FEMALE_RATIO', 'WHITE_NON_WHITE_RATIO']]
+
+    df.columns = [
+        'STATE',
+        'MALE_FEMALE_RATIO_' + year,
+        'WHITE_NON_WHITE_RATIO_' + year
+    ]
+
+    return df
+
+
+def census_voting_2012_loader():
+    '''
+    Loads in the 2012 Cencus voting data.
+    '''
+
+    fname = 'Voting Registration by Race 2012 (Census).xls'
+    df = pd.read_excel(
+        fname,
+        skiprows=3,
+        usecols=['State', 'Race and Hispanic origin', 'Total voted']
+    )
+
+    df['State'].fillna(method='ffill', inplace=True)
+    df = df[11:572]
+
+    df = census_cleaner(df, '2012')
+
+    return df
+
+
+def census_voting_2016_loader():
+    '''
+    Loads in the 2016 Census voting data.
+    '''
+
+    fname = 'Voting Registration by Race 2016 (Census).xlsx'
+    df = pd.read_excel(
+        fname,
+        skiprows=3,
+        usecols=['STATE', 'Sex, Race and Hispanic-Origin', 'Voted']
+    )
+
+    df = df[12:573]
+    df['STATE'].fillna(method='ffill', inplace=True)
+
+    df.columns = ['State', 'Race and Hispanic origin', 'Total voted']
+    replacements = {'White non-Hispanic alone': '.White non-Hispanic alone'}
+    df['Race and Hispanic origin'] = df['Race and Hispanic origin'].replace(
+        replacements)
+
+    df = census_cleaner(df, '2016')
+
+    return df
