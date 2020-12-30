@@ -145,3 +145,22 @@ def high_school_enroll_data_loader():
     df = nces_names_cleaner(df)
 
     return df
+
+
+def nces_data_merger(dataframe1, dataframe2):
+    '''
+    Merges the files from the National Center for Education Statistics and
+    returns a dataframe with HS graduation rates in 2012 and 2016.
+    '''
+
+    df = pd.merge(dataframe1, dataframe2, on='STATE')
+
+    cols = [column for column in df.columns if column.startswith('HS')]
+    df[cols] = df[cols].astype(int)
+
+    df['HS_GRAD_RATE_2012'] = df['HS_GRAD_2012'] / df['HS_ENROLLMENT_2012']
+    df['HS_GRAD_RATE_2016'] = df['HS_GRAD_2016'] / df['HS_ENROLLMENT_2016']
+
+    df = df[['STATE', 'HS_GRAD_RATE_2012', 'HS_GRAD_RATE_2016']]
+
+    return df
