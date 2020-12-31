@@ -267,3 +267,84 @@ def census_merger(dataframe1, dataframe2):
     df = pd.merge(dataframe1, dataframe2, on='STATE')
 
     return df
+
+
+def cook_pvi_loader():
+    '''
+    Loads in Cook Partisan Voting Index (PVI) data for 2012 and 2016.
+
+    The Cook PVI measures how strongly a state leans towards the Democratic
+    or Republican Party compared to the nation as a whole.
+
+    Usually Cook PVI is reported as D+12 or R+5. Here D+12 would be -12 and
+    R+5 would be +5. More negative values indicate a more Democratic state.
+    More positive values indicate a more Republican state.
+    '''
+
+    fname = 'Cook PVI (Cook).csv'
+    df = pd.read_csv(
+        fname,
+        skiprows=1,
+        usecols=['State', 'PVI', 'Unnamed: 5', 'PVI.1', 'Unnamed: 9']
+    )
+    df.columns = [
+        'STATE',
+        'PARTY_2016',
+        'PVI_SCORE_2016',
+        'PARTY_2012',
+        'PVI_SCORE_2012'
+    ]
+
+    df = df[df['STATE'].notna()]
+    drop_state_values = [
+        'Nationwide',
+        'Region',
+        'The Midwest',
+        'The Northeast',
+        'The South',
+        'The West'
+    ]
+    df = df[~df['STATE'].isin(drop_state_values)]
+
+    replacements = {
+        'R+': 1,
+        'D+': -1
+    }
+    cols = ['PARTY_2016', 'PARTY_2012']
+    df[cols] = (df[cols].replace(replacements)
+                        .astype(int))
+
+    df['PVI_2012'] = df['PARTY_2012'] * df['PVI_SCORE_2012']
+    df['PVI_2016'] = df['PARTY_2016'] * df['PVI_SCORE_2016']
+
+    df = df[['STATE', 'PVI_2012', 'PVI_2016']]
+
+    df['STATE'] = df['STATE'].replace('Washington DC', 'District of Columbia')
+
+    return df
+
+
+def winner_calculator(dataframe, year):
+    '''
+    Calculates the winning party in all states in a given year.
+    '''
+
+    df = dataframe.copy()
+
+    df = df[df['year'] == year]
+    df = (df.pivot_table(index='state', columns='party', values='candidatevotes')
+            .reset_index())
+
+    df = (df.rename_axis(None, axis=1)
+            .rename_axis('row_num', axis=0)
+            .reset_index()
+            .drop('row_num', axis=1))
+
+    df['WINNER'] = np.where(df['democrat'] > df['republican'],
+                            'Democrat',
+                            'Republican')
+
+    df = df[['state', 'WINNER']]
+    df.columns = ['STATE', 'WINNER_' + year]
+
+    return df
