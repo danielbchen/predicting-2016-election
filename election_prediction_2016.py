@@ -352,3 +352,39 @@ def harvard_election_winner_loader():
     df = pd.merge(winners_2012, winners_2016, on='STATE')
 
     return df
+
+
+def all_data_merger(df1, df2, df3, df4, df5, df6):
+    """ Merges all datasets together. Then returns a binary column with rows
+    equal to 1 if the Democrat is the winner in a given state in a given
+    year, and a 0 if the Republican is the victor.
+    """
+
+    df = (df1.merge(df2, on='STATE')
+             .merge(df3, on='STATE')
+             .merge(df4, on='STATE')
+             .merge(df5, on='STATE'))
+
+    df['STATE'] = [state.upper() for state in df['STATE']]
+
+    df = pd.merge(df, df6, on='STATE')
+
+    df['WINNER_2012_BINARY'] = [1 if winner == 'Democrat' else 0 for winner in df['WINNER_2012']]
+    df['WINNER_2016_BINARY'] = [1 if winner == 'Democrat' else 0 for winner in df['WINNER_2016']]
+
+    return df
+
+
+def split_data(dataframe, year):
+    """Splits the election data into a training set or testing set."""
+
+    df = dataframe.copy()
+
+    columns = []
+    for column in df.columns:
+        if year in column or column == 'STATE':
+            columns.append(column)
+
+    df = df[columns]
+
+    return df
