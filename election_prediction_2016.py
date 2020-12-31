@@ -257,3 +257,13 @@ def census_voting_2016_loader():
     df = census_cleaner(df, '2016')
 
     return df
+
+
+def census_merger(dataframe1, dataframe2):
+    '''
+    Merges census data from 2012 and 2016.
+    '''
+
+    df = pd.merge(dataframe1, dataframe2, on='STATE')
+
+    return df
