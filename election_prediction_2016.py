@@ -348,3 +348,28 @@ def winner_calculator(dataframe, year):
     df.columns = ['STATE', 'WINNER_' + year]
 
     return df
+
+
+def harvard_election_winner_loader():
+    '''
+    Loads in election winners by state in the 2012 and 2016 U.S. Presidential
+    Elections.
+    '''
+
+    fname = '1976-2016-president.csv'
+    df = pd.read_csv(
+        fname,
+        usecols=['year', 'state', 'party', 'candidatevotes']
+    )
+
+    df = df[(df['year'] == 2012) | (df['year'] == 2016)]
+    df = df[(df['party'] == 'republican') | (df['party'] == 'democrat')]
+
+    df['year'] = df['year'].astype(str)
+
+    winners_2012 = winner_calculator(df, '2012')
+    winners_2016 = winner_calculator(df, '2016')
+
+    df = pd.merge(winners_2012, winners_2016, on='STATE')
+
+    return df
