@@ -3,9 +3,8 @@ import numpy as np
 
 
 def personal_income_data_loader():
-    '''
-    Loads in personal income data.
-    '''
+    """Loads in personal income data."""
+    
     fname = 'Personal Income by State (BEA).csv'
     df = pd.read_csv(
         fname,
@@ -25,10 +24,9 @@ def personal_income_data_loader():
 
 
 def pivoter(dataframe, year):
-    '''
-    Pivots GDP data and creates new column reporting manufacturing in a given
+    """Pivots GDP data and creates new column reporting manufacturing in a given
     year in a given state as a share of its total GDP for that year.
-    '''
+    """
 
     df = dataframe.copy()
 
@@ -53,9 +51,7 @@ def pivoter(dataframe, year):
 
 
 def gdp_by_sector_data_loader():
-    '''
-    Loads in GDP data.
-    '''
+    """Loads in GDP data."""
 
     fname = 'GDP by Sector (BEA).csv'
     df = pd.read_csv(
@@ -91,10 +87,9 @@ def gdp_by_sector_data_loader():
 
 
 def nces_names_cleaner(dataframe):
-    '''
-    Subsets dataframes produced by the National Center for Education
+    """Subsets dataframes produced by the National Center for Education
     Statistics and cleans up the names of states.
-    '''
+    """
 
     df = dataframe.copy()
 
@@ -110,9 +105,7 @@ def nces_names_cleaner(dataframe):
 
 
 def high_school_grad_data_loader():
-    '''
-    Loads in the public high school graduation data.
-    '''
+    """Loads in the public high school graduation data."""
 
     fname = 'High School Graduation by State (NCES).xls'
     df = pd.read_excel(
@@ -129,9 +122,7 @@ def high_school_grad_data_loader():
 
 
 def high_school_enroll_data_loader():
-    '''
-    Loads in the public high school enrollment data.
-    '''
+    """Loads in the public high school enrollment data."""
 
     fname = 'High School Enrollment (NCES).xls'
     df = pd.read_excel(
@@ -148,10 +139,9 @@ def high_school_enroll_data_loader():
 
 
 def nces_data_merger(dataframe1, dataframe2):
-    '''
-    Merges the files from the National Center for Education Statistics and
+    """Merges the files from the National Center for Education Statistics and
     returns a dataframe with HS graduation rates in 2012 and 2016.
-    '''
+    """
 
     df = pd.merge(dataframe1, dataframe2, on='STATE')
 
@@ -167,13 +157,12 @@ def nces_data_merger(dataframe1, dataframe2):
 
 
 def census_cleaner(dataframe, year):
-    '''
-    Cleans a census data file and returns annual data on the ratio of male to
-    female voters along with the ratio of white to non-white voters.
+    """Cleans a census data file and returns annual data on the ratio of male 
+    to female voters along with the ratio of white to non-white voters.
 
     A greater male to female ratio means that there are more males.
     A greater white to non-white ratio means that there are more white voters.
-    '''
+    """
 
     df = dataframe.copy()
 
@@ -216,9 +205,7 @@ def census_cleaner(dataframe, year):
 
 
 def census_voting_2012_loader():
-    '''
-    Loads in the 2012 Cencus voting data.
-    '''
+    """Loads in the 2012 Cencus voting data."""
 
     fname = 'Voting Registration by Race 2012 (Census).xls'
     df = pd.read_excel(
@@ -236,9 +223,7 @@ def census_voting_2012_loader():
 
 
 def census_voting_2016_loader():
-    '''
-    Loads in the 2016 Census voting data.
-    '''
+    """Loads in the 2016 Census voting data."""
 
     fname = 'Voting Registration by Race 2016 (Census).xlsx'
     df = pd.read_excel(
@@ -260,9 +245,7 @@ def census_voting_2016_loader():
 
 
 def census_merger(dataframe1, dataframe2):
-    '''
-    Merges census data from 2012 and 2016.
-    '''
+    """Merges census data from 2012 and 2016."""
 
     df = pd.merge(dataframe1, dataframe2, on='STATE')
 
@@ -270,8 +253,7 @@ def census_merger(dataframe1, dataframe2):
 
 
 def cook_pvi_loader():
-    '''
-    Loads in Cook Partisan Voting Index (PVI) data for 2012 and 2016.
+    """ Loads in Cook Partisan Voting Index (PVI) data for 2012 and 2016.
 
     The Cook PVI measures how strongly a state leans towards the Democratic
     or Republican Party compared to the nation as a whole.
@@ -279,7 +261,7 @@ def cook_pvi_loader():
     Usually Cook PVI is reported as D+12 or R+5. Here D+12 would be -12 and
     R+5 would be +5. More negative values indicate a more Democratic state.
     More positive values indicate a more Republican state.
-    '''
+    """
 
     fname = 'Cook PVI (Cook).csv'
     df = pd.read_csv(
@@ -325,9 +307,7 @@ def cook_pvi_loader():
 
 
 def winner_calculator(dataframe, year):
-    '''
-    Calculates the winning party in all states in a given year.
-    '''
+    """Calculates the winning party in all states in a given year."""
 
     df = dataframe.copy()
 
@@ -351,10 +331,9 @@ def winner_calculator(dataframe, year):
 
 
 def harvard_election_winner_loader():
-    '''
-    Loads in election winners by state in the 2012 and 2016 U.S. Presidential
-    Elections.
-    '''
+    """ Loads in election winners by state in the 2012 and 2016 U.S. 
+    Presidential Elections.
+    """
 
     fname = '1976-2016-president.csv'
     df = pd.read_csv(
