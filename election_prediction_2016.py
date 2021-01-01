@@ -2,6 +2,47 @@ import pandas as pd
 import numpy as np
 
 
+def main():
+    """Combines data from various sources into a dataframe and uses a
+    Random Forest to predict the winner of the 2016 election by party
+    by state based on the 2012 data.
+
+    Prints out the following:
+    1) A dataframe containing results from a test harness.
+    2) Statements regarding which machine algorithm to use.
+    3) The accuracy score of using a Random Forest.
+    4) The states where the model predicted the 2016 winner incorrectly.
+    """
+
+    path = os.path.dirname(os.path.abspath("__file__"))
+
+    census_2012 = census_voting_2012_loader()
+    census_2016 = census_voting_2016_loader()
+    hs_enrollment = high_school_enroll_data_loader()
+    hs_grad = high_school_grad_data_loader()
+
+    income = personal_income_data_loader()
+    manufacturing_gdp = gdp_by_sector_data_loader()
+    hs_edu = nces_data_merger(hs_enrollment, hs_grad)
+    cook_pvi = cook_pvi_loader()
+    election_winners = harvard_election_winner_loader()
+    census_merged = census_merger(census_2012, census_2016)
+
+    df = all_data_merger(income, 
+                         manufacturing_gdp, 
+                         hs_edu, cook_pvi, 
+                         election_winners, 
+                         census_merged)
+
+    harness_df = test_harness(df)
+
+    print('Test Harness Results:', harness_df, sep='\n\n')
+    print('\n')
+    algorithm_decider(df)
+    print('\n')
+    random_forest_modeler(df)
+
+
 def personal_income_data_loader():
     """Loads in personal income data."""
     
@@ -493,3 +534,7 @@ def random_forest_modeler(dataframe):
     print('The following states were predicted incorrectly:',
           incorrect_predicitions[['STATE', 'WINNER_2016', '2016_PREDICTED_WINNER']],
           sep='\n\n')
+
+
+if __name__ == '__main__':
+    main()
