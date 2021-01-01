@@ -458,3 +458,38 @@ def algorithm_decider(dataframe):
     print('Optimal model(s) for RECALL:',
           ', '.join(optimal_recall['ALGORITHM'].values))
     print('Optimal model(s) for F1:', *optimal_F1['ALGORITHM'].values)
+
+
+def random_forest_modeler(dataframe):
+    '''
+    Runs a Random Forest algorithm on the data. Returns the model's accuracy,
+    and the incorrect predictions.
+    '''
+
+    df = dataframe.copy()
+
+    training_data = split_data(df, '2012')
+    test_data = split_data(df, '2016')
+
+    x_train = training_data.drop(['STATE', 'WINNER_2012', 'WINNER_2012_BINARY'], 1)
+    y_train = training_data['WINNER_2012']
+
+    x_test = test_data.drop(['STATE', 'WINNER_2016', 'WINNER_2016_BINARY'], 1)
+    y_test = test_data['WINNER_2016']
+
+    model = RandomForestClassifier()
+    model.fit(x_train, y_train)
+    predict = model.predict(x_test)
+
+    df['2016_PREDICTED_WINNER'] = predict
+    incorrect_predicitions = df[df['WINNER_2016'] != df['2016_PREDICTED_WINNER']]
+
+    acc_score = accuracy_score(y_test, predict)
+
+    print('Based on data from 2012, the Random Forest algorithm predicts the '
+          'winners of the 2016 Presidential Election with an accuracy score of',
+          acc_score)
+
+    print('The following states were predicted incorrectly:',
+          incorrect_predicitions[['STATE', 'WINNER_2016', '2016_PREDICTED_WINNER']],
+          sep='\n\n')
