@@ -435,3 +435,26 @@ def test_harness(dataframe):
         )
 
     return test_harness_results
+
+
+def algorithm_decider(dataframe):
+    """Prints four sentences that report the optimal ML model to use given
+    a certain metric.
+    """
+
+    df = dataframe.copy()
+
+    df = test_harness(df)
+
+    optimal_accuracy = df[df['ACCURACY'] == df['ACCURACY'].max()]
+    optimal_precision = df[df['PRECISION'] == df['PRECISION'].max()]
+    optimal_recall = df[df['RECALL'] == df['RECALL'].max()]
+    optimal_F1 = df[df['F1'] == df['F1'].max()]
+
+    print('Optimal model(s) for ACCURACY:', 
+          *optimal_accuracy['ALGORITHM'].values)
+    print('Optimal model(s) for PRECISION:', 
+          ', '.join(optimal_precision['ALGORITHM'].values))
+    print('Optimal model(s) for RECALL:',
+          ', '.join(optimal_recall['ALGORITHM'].values))
+    print('Optimal model(s) for F1:', *optimal_F1['ALGORITHM'].values)
