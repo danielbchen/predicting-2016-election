@@ -388,3 +388,50 @@ def split_data(dataframe, year):
     df = df[columns]
 
     return df
+
+
+def test_harness(dataframe):
+    """Takes a dataframe, splits it into a training dataset, and returns a new
+    dataframe summarizing the performance of different machine learning models
+    on the dataframe.
+    """
+
+    df = dataframe.copy()
+
+    training_data = split_data(df, '2012')
+    x_train = training_data.drop(['STATE', 'WINNER_2012', 'WINNER_2012_BINARY'], 1)
+    y_train = training_data['WINNER_2012_BINARY']
+
+    algorithms = []
+    algorithms.append(('Decision Tree', DecisionTreeClassifier()))
+    algorithms.append(('Linear Discriminant', LinearDiscriminantAnalysis()))
+    algorithms.append(('Support Vector Classifier', SVC(gamma='auto')))
+    algorithms.append(('Naive Bayes', GaussianNB()))
+    algorithms.append(('Logistic Regression', LogisticRegression(max_iter=1000)))
+    algorithms.append(('K-Nearest Neighbor', KNeighborsClassifier()))
+    algorithms.append(('Random Forest', RandomForestClassifier()))
+
+    measures = ['accuracy', 'recall', 'precision', 'f1']
+
+    test_harness_results = pd.DataFrame(columns=['ALGORITHM',
+                                                 'ACCURACY',
+                                                 'STANDARD DEVIATION',
+                                                 'PRECISION',
+                                                 'RECALL',
+                                                 'F1'])
+
+    for name, algorithm in algorithms:
+        results = cross_validate(algorithm, x_train, y_train, cv=10, scoring=measures)
+        test_harness_results = test_harness_results.append(
+            {
+                'ALGORITHM': name,
+                'ACCURACY': results['test_accuracy'].mean(),
+                'STANDARD DEVIATION': results['test_accuracy'].std(),
+                'PRECISION': results['test_precision'].mean(),
+                'RECALL': results['test_recall'].mean(),
+                'F1': results['test_f1'].mean()
+            },
+            ignore_index=True
+        )
+
+    return test_harness_results
