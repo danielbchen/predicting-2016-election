@@ -81,14 +81,12 @@ def pivoter(dataframe, year):
 
     df = dataframe.copy()
 
-    df = (df
-          .pivot(index='GeoName', columns='Description', values=year)
-          .reset_index())
+    df = (df.pivot(index='GeoName', columns='Description', values=year)
+            .reset_index())
 
-    df = (df
-          .rename_axis(None, axis=1)
-          .rename_axis('row_num', axis=0)
-          .reset_index())
+    df = (df.rename_axis(None, axis=1)
+            .rename_axis('row_num', axis=0)
+            .reset_index())
 
     cols = ['Manufacturing', 'All industry total']
     df[cols] = df[cols].astype(float)
@@ -105,11 +103,9 @@ def gdp_by_sector_data_loader():
     """Loads in GDP data."""
 
     fname = 'GDP by Sector (BEA).csv'
-    df = pd.read_csv(
-        fname,
-        skiprows=4,
-        usecols=['GeoName', 'Description', '2012', '2016']
-    )
+    df = pd.read_csv(fname,
+                     skiprows=4,
+                     usecols=['GeoName', 'Description', '2012', '2016'])
 
     drop_regions = [
         'United States *',
@@ -159,11 +155,9 @@ def high_school_grad_data_loader():
     """Loads in the public high school graduation data."""
 
     fname = 'High School Graduation by State (NCES).xls'
-    df = pd.read_excel(
-        fname,
-        skiprows=2,
-        usecols=['Unnamed: 0', '2011-12', '2015-16']
-    )
+    df = pd.read_excel(fname,
+                       skiprows=2,
+                       usecols=['Unnamed: 0', '2011-12', '2015-16'])
 
     df.columns = ['STATE', 'HS_GRAD_2012', 'HS_GRAD_2016']
 
@@ -176,11 +170,9 @@ def high_school_enroll_data_loader():
     """Loads in the public high school enrollment data."""
 
     fname = 'High School Enrollment (NCES).xls'
-    df = pd.read_excel(
-        fname,
-        skiprows=2,
-        usecols=['Unnamed: 0', 'Fall 2012', 'Fall 2016']
-    )
+    df = pd.read_excel(fname,
+                       skiprows=2,
+                       usecols=['Unnamed: 0', 'Fall 2012', 'Fall 2016'])
 
     df.columns = ['STATE', 'HS_ENROLLMENT_2012', 'HS_ENROLLMENT_2016']
 
@@ -241,8 +233,7 @@ def census_cleaner(dataframe, year):
     df['NON-WHITE'] = (df['Asian alone']
                        + df['Black alone']
                        + df['Hispanic (of any race)'])
-    df['WHITE_NON_WHITE_RATIO'] = (df['.White non-Hispanic alone']
-                                   / df['NON-WHITE'])
+    df['WHITE_NON_WHITE_RATIO'] = df['.White non-Hispanic alone'] / df['NON-WHITE']
 
     df = df[['State', 'MALE_FEMALE_RATIO', 'WHITE_NON_WHITE_RATIO']]
 
@@ -259,11 +250,9 @@ def census_voting_2012_loader():
     """Loads in the 2012 Cencus voting data."""
 
     fname = 'Voting Registration by Race 2012 (Census).xls'
-    df = pd.read_excel(
-        fname,
-        skiprows=3,
-        usecols=['State', 'Race and Hispanic origin', 'Total voted']
-    )
+    df = pd.read_excel(fname,
+                       skiprows=3,
+                       usecols=['State', 'Race and Hispanic origin', 'Total voted'])
 
     df['State'].fillna(method='ffill', inplace=True)
     df = df[11:572]
@@ -277,11 +266,9 @@ def census_voting_2016_loader():
     """Loads in the 2016 Census voting data."""
 
     fname = 'Voting Registration by Race 2016 (Census).xlsx'
-    df = pd.read_excel(
-        fname,
-        skiprows=3,
-        usecols=['STATE', 'Sex, Race and Hispanic-Origin', 'Voted']
-    )
+    df = pd.read_excel(fname,
+                       skiprows=3,
+                       usecols=['STATE', 'Sex, Race and Hispanic-Origin', 'Voted'])
 
     df = df[12:573]
     df['STATE'].fillna(method='ffill', inplace=True)
@@ -315,11 +302,9 @@ def cook_pvi_loader():
     """
 
     fname = 'Cook PVI (Cook).csv'
-    df = pd.read_csv(
-        fname,
-        skiprows=1,
-        usecols=['State', 'PVI', 'Unnamed: 5', 'PVI.1', 'Unnamed: 9']
-    )
+    df = pd.read_csv(fname,
+                     skiprows=1,
+                     usecols=['State', 'PVI', 'Unnamed: 5', 'PVI.1', 'Unnamed: 9'])
     df.columns = [
         'STATE',
         'PARTY_2016',
@@ -344,8 +329,7 @@ def cook_pvi_loader():
         'D+': -1
     }
     cols = ['PARTY_2016', 'PARTY_2012']
-    df[cols] = (df[cols].replace(replacements)
-                        .astype(int))
+    df[cols] = df[cols].replace(replacements).astype(int)
 
     df['PVI_2012'] = df['PARTY_2012'] * df['PVI_SCORE_2012']
     df['PVI_2016'] = df['PARTY_2016'] * df['PVI_SCORE_2016']
@@ -387,10 +371,8 @@ def harvard_election_winner_loader():
     """
 
     fname = '1976-2016-president.csv'
-    df = pd.read_csv(
-        fname,
-        usecols=['year', 'state', 'party', 'candidatevotes']
-    )
+    df = pd.read_csv(fname,
+                     usecols=['year', 'state', 'party', 'candidatevotes'])
 
     df = df[(df['year'] == 2012) | (df['year'] == 2016)]
     df = df[(df['party'] == 'republican') | (df['party'] == 'democrat')]
