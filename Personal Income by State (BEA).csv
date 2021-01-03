@@ -1,0 +1,69 @@
+"SAINC1 Personal Income Summary: Personal Income, Population, Per Capita Personal Income"
+"Personal income (Millions of dollars)" 
+"Bureau of Economic Analysis" 
+"State or DC"
+"GeoFips","GeoName","2012","2016"
+"00000","United States",13998383.0,16151881.0
+"01000","Alabama",172804.1,192281.9
+"02000","Alaska *",39169.2,41745.6
+"04000","Arizona",236846.1,283199.3
+"05000","Arkansas",106984.7,120748.2
+"06000","California",1852397.5,2273557.5
+"08000","Colorado",237141.5,290669.6
+"09000","Connecticut",233337.8,250178.6
+"10000","Delaware",40338.4,46341.8
+"11000","District of Columbia",43426.9,53375.8
+"12000","Florida",793428.8,949718.0
+"13000","Georgia",368868.1,441905.5
+"15000","Hawaii *",62455.9,73048.0
+"16000","Idaho",56139.8,68248.4
+"17000","Illinois",593239.1,672019.9
+"18000","Indiana",257149.5,289731.4
+"19000","Iowa",131984.2,145756.4
+"20000","Kansas",130182.0,137945.1
+"21000","Kentucky",156827.6,176435.1
+"22000","Louisiana",186589.4,198952.0
+"23000","Maine",53490.0,59685.4
+"24000","Maryland",315230.9,354260.6
+"25000","Massachusetts",382009.4,448480.5
+"26000","Michigan",386568.4,444166.8
+"27000","Minnesota",257319.7,293162.5
+"28000","Mississippi",99386.4,106585.1
+"29000","Missouri",241762.7,269771.2
+"30000","Montana",40471.0,45822.5
+"31000","Nebraska",86293.7,94547.5
+"32000","Nevada",108825.1,132315.0
+"33000","New Hampshire",67528.8,75858.2
+"34000","New Jersey",491662.0,557461.9
+"35000","New Mexico",74578.4,81626.5
+"36000","New York",1056671.2,1205507.2
+"37000","North Carolina",379925.3,434789.0
+"38000","North Dakota",38859.8,39104.0
+"39000","Ohio",469260.8,526177.2
+"40000","Oklahoma",158353.9,164463.4
+"41000","Oregon",154408.5,190534.2
+"42000","Pennsylvania",587521.9,662352.9
+"44000","Rhode Island",48810.3,53530.2
+"45000","South Carolina",167797.5,201138.8
+"46000","South Dakota",37659.4,42049.0
+"47000","Tennessee",253613.1,289936.0
+"48000","Texas",1132222.1,1278552.1
+"49000","Utah",103120.6,128900.6
+"50000","Vermont",28395.7,31445.0
+"51000","Virginia",405863.9,452400.5
+"53000","Washington",329258.6,407060.4
+"54000","West Virginia",65206.2,67928.7
+"55000","Wisconsin",246150.8,274764.7
+"56000","Wyoming",30846.1,31645.7
+"91000","New England",813572.1,919177.8
+"92000","Mideast",2534851.3,2879300.1
+"93000","Great Lakes",1952368.6,2206860.0
+"94000","Plains",924061.4,1022335.6
+"95000","Southeast",3157295.1,3632818.8
+"96000","Southwest",1602000.5,1807841.2
+"97000","Rocky Mountain",467719.0,565286.7
+"98000","Far West",2546514.9,3118260.6
+"Legend / Footnotes:"
+"* Estimates prior to 1950 are not available for Alaska and Hawaii."
+"Note-- All dollar estimates are in millions of current dollars (not adjusted for inflation). Calculations are performed on unrounded data."
+"Last updated: September 24, 2020-- revised statistics for 2013-2019."
