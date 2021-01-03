@@ -57,11 +57,9 @@ def personal_income_data_loader():
     """Loads in personal income data."""
     
     fname = 'Personal Income by State (BEA).csv'
-    df = pd.read_csv(
-        fname,
-        skiprows=4,
-        usecols=['GeoName', '2012', '2016']
-    )
+    df = pd.read_csv(fname,
+                     skiprows=4,
+                     usecols=['GeoName', '2012', '2016'])
 
     df = df.copy()
 
