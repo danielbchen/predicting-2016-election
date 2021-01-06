@@ -1,8 +1,10 @@
+from geopandas import GeoDataFrame
 import geopandas as gpd
 import io
 import os
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 import requests
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
@@ -580,6 +582,35 @@ def geo_data_loader():
     return df
 
 
+
+gdf = geo_data_loader()
+gdf['NAME'] = [name.upper() for name in gdf['NAME']]
+new_col_names = ['STATE' if col_name == 'NAME' else col_name for col_name in gdf.columns]
+gdf.columns = new_col_names
+
+merged_df = pd.merge(df, gdf, how='inner', on='STATE')
+
+merged_gdf = GeoDataFrame(merged_df,
+                          crs='+proj=laea +lat_0=30 +lon_0=-95',
+                          geometry=merged_df['geometry'])
+
+fig, ax = plt.subplots(figsize=(17, 10))
+merged_gdf.plot(ax=ax, column='WINNER_2012')
+
+import plotly.express as px
+
+fig = px.choropleth(merged_df, 
+                    locations=merged_df['STUSPS'], # State abbreviations
+                    locationmode='USA-states', 
+                    scope='usa',
+                    color='WINNER_2012',
+                    labels={'WINNER_2012': 'WINNER'},
+                    color_discrete_map={
+                        'Democrat': 'blue',
+                        'Republican': 'red'},
+                    title='2012 U.S. Presidential Results')
+
+fig.show()
 
 if __name__ == '__main__':
     main()
