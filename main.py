@@ -1,7 +1,7 @@
 import numpy as np
 import os
 import pandas as pd
-import plotly.express as px
+import plotly.express as px  # pip install plotly==4.14.1
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.svm import SVC
