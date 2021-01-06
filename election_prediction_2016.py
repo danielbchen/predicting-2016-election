@@ -609,5 +609,7 @@ fig = px.choropleth(merged_df,
 
 fig.show()
 
+
+
 if __name__ == '__main__':
     main()
