@@ -544,8 +544,8 @@ def mapper(dataframe, election_year, plot_title):
                         color=election_year,
                         labels={election_year: 'WINNER'},
                         color_discrete_map={
-                            'Democrat': 'blue',
-                            'Republican': 'red'},
+                            'Democrat'  : '#0015BC',
+                            'Republican': '#FF0000'},
                         title=plot_title)
 
     fig.write_image('{}.png'.format(plot_title))
