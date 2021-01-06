@@ -537,7 +537,7 @@ def get_shape_files():
     this function downloads all the files necessary to plot U.S. states with 
     GeoPandas.
     """
-    
+
     path = os.path.dirname(os.path.abspath("__file__"))
 
     file_names = [
