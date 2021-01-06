@@ -34,3 +34,8 @@ The actual map is shown below:
 
 Arizona, Florida, Minnesota, Oregon, and Pennsylvania were predicted incorrectly. In terms of accuracy, 45 out of 50 states were predicted correctly for an accuracy score of 90%. 
 
+### Model Discussion
+
+The model was early in predicting a blue Arizona and a blue Pennsylvania. Though they went red in 2016 before flipping four years down the road. The model's incorrect prediction isn't surprising. Pennsylvania is a battleground state after all, and strategists and pollsters have been optimistic of the turning tide in Arizona. 
+
+Out of context 90% may appear impressive. However, this would assume that each state is weighted equal on the path to the Oval Office. This is not true. States such as Pennsylvania and Florida are always under watch because they are purple states. Moreover, they carry the pair of states carries 20 and 29 electoral votes respectively. An incorrect forecast in these places can not only cost a candidate/party a total of 49 electoral votes, but more importantly, it can cost them the path to the executive branch.
