@@ -600,7 +600,11 @@ fig = px.choropleth(merged_df,
                     color_discrete_map={
                         'Democrat': 'blue',
                         'Republican': 'red'},
-                    title='2012 U.S. Presidential Results')
+                        title=plot_title)
+
+    fig.write_image('{}.png'.format(plot_title))
+
+
 
 fig.show()
 
