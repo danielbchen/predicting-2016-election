@@ -557,9 +557,9 @@ def get_shape_files():
         file_endings = ['dbf', 'prj', 'shp', 'shx']
         files = [file for file in zip_folder.namelist() if file.endswith(tuple(file_endings))]
         shp, shx, dbf, prj = [file for file in files]
-        shp_path = os.path.join(path, shp)
+        dbf_path = os.path.join(path, dbf)
     else:
-        shp_path = 'File already exists!'
+        dbf_path = 'File already exists!'
 
     return shp_path
 
