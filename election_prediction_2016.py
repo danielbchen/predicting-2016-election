@@ -55,6 +55,11 @@ def main():
     print('\n')
     random_forest_modeler(df)
 
+    predictions_df = random_forest_modeler(df)
+    mapper(predictions_df, '2016_PREDICTED_WINNER',
+           'Predicted 2016 U.S. Presidential Election Results')
+    mapper(predictions_df, 'WINNER_2016',
+           '2016 U.S. Presidential Election Results')
 
 def personal_income_data_loader():
     """Loads in personal income data."""
