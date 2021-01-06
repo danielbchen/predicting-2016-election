@@ -1,6 +1,8 @@
+import io
 import os
 import pandas as pd
 import numpy as np
+import requests
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.svm import SVC
@@ -10,6 +12,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_validate
 from sklearn.metrics import accuracy_score
+import zipfile
 
 
 def main():
@@ -524,6 +527,40 @@ def random_forest_modeler(dataframe):
     print('The following states were predicted incorrectly:',
           incorrect_predicitions[['STATE', 'WINNER_2016', '2016_PREDICTED_WINNER']],
           sep='\n\n')
+
+
+def get_shape_files():
+    """
+    docstring
+    """
+    
+    path = os.path.dirname(os.path.abspath("__file__"))
+
+    file_names = [
+        'cb_2018_us_state_500k.cpg',
+        'cb_2018_us_state_500k.prj',
+        'cb_2018_us_state_500k.dbf',
+        'cb_2018_us_state_500k.shx',
+        'cb_2018_us_state_500k.shp',
+        'cb_2018_us_state_500k.shp.iso.xml',
+        'cb_2018_us_state_500k.shp.ea.iso.xml',
+    ]
+    booleans = [os.path.exists(file) for file in file_names]
+
+    census_link = 'https://www2.census.gov/geo/tiger/GENZ2018/shp/cb_2018_us_state_500k.zip'
+
+    if False in booleans:
+        response = requests.get(census_link)
+        zip_folder = zipfile.ZipFile(io.BytesIO(response.content))
+        zip_folder.extractall(path=path)
+        file_endings = ['dbf', 'prj', 'shp', 'shx']
+        files = [file for file in zip_folder.namelist() if file.endswith(tuple(file_endings))]
+        shp, shx, dbf, prj = [file for file in files]
+        shp_path = os.path.join(path, shp)
+    else:
+        shp_path = 'File already exists!'
+
+    return shp_path
 
 
 if __name__ == '__main__':
