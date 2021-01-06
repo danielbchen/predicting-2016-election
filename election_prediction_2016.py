@@ -530,8 +530,9 @@ def random_forest_modeler(dataframe):
 
 
 def get_shape_files():
-    """
-    docstring
+    """Checks if shape files exist locally. If any one of them is missing, then 
+    this function downloads all the files necessary to plot U.S. states with 
+    GeoPandas.
     """
     
     path = os.path.dirname(os.path.abspath("__file__"))
@@ -561,6 +562,9 @@ def get_shape_files():
         shp_path = 'File already exists!'
 
     return shp_path
+
+
+def 
 
 
 if __name__ == '__main__':
