@@ -561,7 +561,15 @@ def get_shape_files():
     else:
         dbf_path = 'File already exists!'
 
-    return shp_path
+    return dbf_path
+
+
+def geo_data_loader():
+    """
+    """
+
+    path = os.path.dirname(os.path.abspath("__file__"))
+    file_path = get_shape_files()
 
 
 def 
