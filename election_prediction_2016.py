@@ -566,8 +566,7 @@ def get_shape_files():
 
 
 def geo_data_loader():
-    """
-    """
+    """Returns a GeoDataframe containing state polygon information."""
 
     path = os.path.dirname(os.path.abspath("__file__"))
     file_path = get_shape_files()
