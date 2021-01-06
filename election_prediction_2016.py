@@ -518,7 +518,11 @@ def random_forest_modeler(dataframe):
     df['2016_PREDICTED_WINNER'] = predict
     incorrect_predicitions = df[df['WINNER_2016'] != df['2016_PREDICTED_WINNER']]
 
-    acc_score = accuracy_score(y_test, predict)
+    abbr_state_xwalk = us.states.mapping('name', 'abbr')
+    abbr_state_xwalk = {state.upper(): abbreviation for state,
+                        abbreviation in abbr_state_xwalk.items()}
+    predictions_df['ABBREVIATION'] = predictions_df['STATE'].replace(abbr_state_xwalk)
+    #incorrect_predicitions = df[df['WINNER_2016'] != df['2016_PREDICTED_WINNER']]
 
     print('Based on data from 2012, the Random Forest algorithm predicts the '
           'winners of the 2016 Presidential Election with an accuracy score of',
