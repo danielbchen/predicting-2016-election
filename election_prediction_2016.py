@@ -1,3 +1,4 @@
+import geopandas as gpd
 import io
 import os
 import pandas as pd
@@ -571,8 +572,14 @@ def geo_data_loader():
     path = os.path.dirname(os.path.abspath("__file__"))
     file_path = get_shape_files()
 
+    if file_path == 'File already exists!':
+        file_name = os.path.join(path, 'cb_2018_us_state_500k.dbf')
+        df = gpd.read_file(file_name)
+    else:
+        df = gpd.read_file(file_path)
 
-def 
+    return df
+
 
 
 if __name__ == '__main__':
