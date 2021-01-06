@@ -10,7 +10,6 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_validate
-from sklearn.metrics import accuracy_score
 import us  # pip install us
 import zipfile
 
@@ -26,8 +25,6 @@ def main():
     3) The accuracy score of using a Random Forest.
     4) The states where the model predicted the 2016 winner incorrectly.
     """
-
-    path = os.path.dirname(os.path.abspath("__file__"))
 
     census_2012 = census_voting_2012_loader()
     census_2016 = census_voting_2016_loader()
@@ -53,7 +50,6 @@ def main():
     print('\n')
     algorithm_decider(df)
     print('\n')
-    random_forest_modeler(df)
 
     predictions_df = random_forest_modeler(df)
     mapper(predictions_df, '2016_PREDICTED_WINNER',
@@ -62,6 +58,10 @@ def main():
            '2016 U.S. Presidential Election Results')
     print('Maps showing actual vs. predicted presidential election results '
           'have been saved.')
+    print('\n')
+
+    results_summarizer(predictions_df)
+
 
 def personal_income_data_loader():
     """Loads in personal income data."""
@@ -523,99 +523,53 @@ def random_forest_modeler(dataframe):
     predict = model.predict(x_test)
 
     df['2016_PREDICTED_WINNER'] = predict
-    incorrect_predicitions = df[df['WINNER_2016'] != df['2016_PREDICTED_WINNER']]
 
     abbr_state_xwalk = us.states.mapping('name', 'abbr')
     abbr_state_xwalk = {state.upper(): abbreviation for state,
                         abbreviation in abbr_state_xwalk.items()}
-    predictions_df['ABBREVIATION'] = predictions_df['STATE'].replace(abbr_state_xwalk)
-    #incorrect_predicitions = df[df['WINNER_2016'] != df['2016_PREDICTED_WINNER']]
+    df['ABBREVIATION'] = df['STATE'].replace(abbr_state_xwalk)
 
-    print('Based on data from 2012, the Random Forest algorithm predicts the '
-          'winners of the 2016 Presidential Election with an accuracy score of',
-          acc_score)
-
-    print('The following states were predicted incorrectly:',
-          incorrect_predicitions[['STATE', 'WINNER_2016', '2016_PREDICTED_WINNER']],
-          sep='\n\n')
-
-
-def get_shape_files():
-    """Checks if shape files exist locally. If any one of them is missing, then 
-    this function downloads all the files necessary to plot U.S. states with 
-    GeoPandas.
-    """
-
-    path = os.path.dirname(os.path.abspath("__file__"))
-
-    file_names = [
-        'cb_2018_us_state_500k.cpg',
-        'cb_2018_us_state_500k.prj',
-        'cb_2018_us_state_500k.dbf',
-        'cb_2018_us_state_500k.shx',
-        'cb_2018_us_state_500k.shp',
-        'cb_2018_us_state_500k.shp.iso.xml',
-        'cb_2018_us_state_500k.shp.ea.iso.xml',
-    ]
-    booleans = [os.path.exists(file) for file in file_names]
-
-    census_link = 'https://www2.census.gov/geo/tiger/GENZ2018/shp/cb_2018_us_state_500k.zip'
-
-    if False in booleans:
-        response = requests.get(census_link)
-        zip_folder = zipfile.ZipFile(io.BytesIO(response.content))
-        zip_folder.extractall(path=path)
-        file_endings = ['dbf', 'prj', 'shp', 'shx']
-        files = [file for file in zip_folder.namelist() if file.endswith(tuple(file_endings))]
-        shp, shx, dbf, prj = [file for file in files]
-        dbf_path = os.path.join(path, dbf)
-    else:
-        dbf_path = 'File already exists!'
-
-    return dbf_path
+    return df
 
 
 def mapper(dataframe, election_year, plot_title):
     """Base function to map election results."""
 
-    return df
+    df = dataframe.copy()
 
-
-
-gdf = geo_data_loader()
-gdf['NAME'] = [name.upper() for name in gdf['NAME']]
-new_col_names = ['STATE' if col_name == 'NAME' else col_name for col_name in gdf.columns]
-gdf.columns = new_col_names
-
-merged_df = pd.merge(df, gdf, how='inner', on='STATE')
-
-merged_gdf = GeoDataFrame(merged_df,
-                          crs='+proj=laea +lat_0=30 +lon_0=-95',
-                          geometry=merged_df['geometry'])
-
-fig, ax = plt.subplots(figsize=(17, 10))
-merged_gdf.plot(ax=ax, column='WINNER_2012')
-
-import plotly.express as px
-
-fig = px.choropleth(merged_df, 
-                    locations=merged_df['STUSPS'], # State abbreviations
-                    locationmode='USA-states', 
-                    scope='usa',
-                    color='WINNER_2012',
-                    labels={'WINNER_2012': 'WINNER'},
-                    color_discrete_map={
-                        'Democrat': 'blue',
-                        'Republican': 'red'},
+    fig = px.choropleth(df,
+                        locations=df['ABBREVIATION'],
+                        locationmode='USA-states',
+                        scope='usa',
+                        color=election_year,
+                        labels={election_year: 'WINNER'},
+                        color_discrete_map={
+                            'Democrat': 'blue',
+                            'Republican': 'red'},
                         title=plot_title)
 
     fig.write_image('{}.png'.format(plot_title))
 
 
+def results_summarizer(dataframe):
+    """Prints out statements summarizing how the model performed."""
 
-fig.show()
+    df = dataframe.copy()
 
+    incorrect_predicitions = df[df['WINNER_2016'] != df['2016_PREDICTED_WINNER']]
+
+    accuracy = 1 - (len(incorrect_predicitions) / len(predictions_df))
+    accuracy = round(accuracy * 100, 2)
+
+    print('Based on data from 2012, the Random Forest algorithm predicts the '
+          'winners of the 2016 Presidential Election with an accuracy score of',
+          '{}%'.format(accuracy))
+    print('\n')
+    print('The following states were predicted incorrectly:',
+          incorrect_predicitions[['STATE', 'WINNER_2016', '2016_PREDICTED_WINNER']],
+          sep='\n\n')
 
 
 if __name__ == '__main__':
+    path = os.path.dirname(os.path.abspath("__file__"))
     main()
