@@ -60,6 +60,8 @@ def main():
            'Predicted 2016 U.S. Presidential Election Results')
     mapper(predictions_df, 'WINNER_2016',
            '2016 U.S. Presidential Election Results')
+    print('Maps showing actual vs. predicted presidential election results '
+          'have been saved.')
 
 def personal_income_data_loader():
     """Loads in personal income data."""
