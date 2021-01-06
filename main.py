@@ -257,7 +257,7 @@ def census_cleaner(dataframe, year):
 def census_voting_2012_loader():
     """Loads in the 2012 Cencus voting data."""
 
-    fname = 'Voting Registration by Race 2012 (Census).xls'
+    fname = 'Voting Registration by Demographics 2012 (Census).xls'
     df = pd.read_excel(fname,
                        skiprows=3,
                        usecols=['State', 'Race and Hispanic origin', 'Total voted'])
@@ -273,7 +273,7 @@ def census_voting_2012_loader():
 def census_voting_2016_loader():
     """Loads in the 2016 Census voting data."""
 
-    fname = 'Voting Registration by Race 2016 (Census).xlsx'
+    fname = 'Voting Registration by Demographics 2016 (Census).xlsx'
     df = pd.read_excel(fname,
                        skiprows=3,
                        usecols=['STATE', 'Sex, Race and Hispanic-Origin', 'Voted'])
